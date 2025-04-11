@@ -1,1 +1,4 @@
 .DS_Store
+node.yaml
+terraform/.terraform/*
+.terraform.lock.hcl
