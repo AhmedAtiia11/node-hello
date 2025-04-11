@@ -49,12 +49,21 @@ jobs:
       with:
         terraform_version: 1.7.4
 
-    - name: Terraform Destroy 
-      run: terraform destroy -auto-approve -input=false
-      continue-on-error: true      
-
     - name: Terraform Init
       run: terraform init 
+
+    - name: Terraform Destroy 
+      run: terraform destroy -auto-approve -input=false
+      continue-on-error: true
+
+    - name: Remove existing app container
+      run: |
+        if docker ps -a | grep -q app; then
+          echo "Found existing 'app' container. Removing..."
+          docker rm -f app
+        else
+          echo "No 'app' container found."
+        fi        
 
     - name: Terraform Apply
       run: terraform apply -input=false -auto-approve
