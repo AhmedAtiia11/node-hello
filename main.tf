@@ -1,16 +1,15 @@
 terraform {
   required_providers {
     docker = {
-      source  = "kreuzwerker/docker"  # Correct provider source
-      version = "3.0.2"             # Check for the latest version if needed
+      source  = "kreuzwerker/docker"
+      version = "3.0.2"
     }
   }
 }
 
-
 provider "docker" {
   registry_auth {
-    address  = "docker.io"
+    address  = "registry-1.docker.io"  
     username = var.dockerhub_username
     password = var.dockerhub_password
   }
