@@ -70,8 +70,3 @@ jobs:
         fi
     - name: Terraform Apply
       run: terraform apply -input=false -auto-approve
-
-    - name: monitoring and logging
-      run : docker run -e NEW_RELIC_LICENSE_KEY=bda52792031247541e6ee4d19db9664dFFFFNRAL \
-            -e NEW_RELIC_APP_NAME="node-hello-app" \
-            ahmedatiia11/node-hello:latest
