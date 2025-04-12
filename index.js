@@ -4,7 +4,7 @@ require('newrelic');
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
-  const msg = 'Hello Node! I AM Batman \n'
+  const msg = 'Hello Node! Testing \n'
   res.end(msg);
 });
 
