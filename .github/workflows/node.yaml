@@ -31,10 +31,16 @@ jobs:
 
     - name: Clean Previous Deployment
       run: terraform destroy -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 
     - name: Build Docker Image
       run: terraform apply -target=docker_image.app_image -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}     
 
     - name: Push to Docker Hub
       run: terraform apply -target=docker_registry_image.app_image -auto-approve -input=false
