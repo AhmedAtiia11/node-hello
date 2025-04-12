@@ -64,6 +64,14 @@ jobs:
         else
           echo "No 'app' container found."
         fi        
+    - name: Remove old app image
+      run: |
+        if docker images | grep -q ahmedatiia11/node-hello ; then
+          echo "Found existing 'node-hello' image. Removing..."
+          docker rmi -f ahmedatiia11/node-hello 
+        else
+          echo "No 'node-hello' image found."
+        fi
 
     - name: Terraform Apply
       run: terraform apply -input=false -auto-approve
