@@ -39,11 +39,15 @@ resource "docker_registry_image" "app_image" {
 }
 
 resource "docker_container" "app_container" {
-  name  = "app"
-  image = docker_image.app_image.image_id
+  name         = "app"
+  image        = docker_image.app_image.image_id
+
+  
   ports {
     internal = 3000
     external = 3000
   }
+
+  restart = "unless-stopped"  # Add restart policy to handle crashes
 }
 
