@@ -25,15 +25,14 @@ variable "dockerhub_password" {
 }
 
 resource "docker_image" "app_image" {
-  name = "ahmedatiia11/node-hello:latest"
+  name = "registry-1.docker.io/ahmedatiia11/node-hello:latest"
   build {
     context    = "."
-    dockerfile = "Dockerfile"  # Explicitly specify if not using default name
-    tag        = ["docker.io/ahmedatiia11/node-hello:latest"]  # Full registry path
+    dockerfile = "Dockerfile"
+    tag        = ["registry-1.docker.io/ahmedatiia11/node-hello:latest"]
   }
 }
 
-# Add this resource to handle image pushing
 resource "docker_registry_image" "app_image" {
   name          = docker_image.app_image.name
   keep_remotely = true  # Keep image in registry even after destroy
