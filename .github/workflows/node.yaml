@@ -57,3 +57,6 @@ jobs:
 
     - name: Deploy Container
       run: terraform apply -target=docker_container.app_container -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}     
