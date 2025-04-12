@@ -3,7 +3,7 @@ const port = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
-  const msg = 'Hello Node! on 12 april 2025 \n'
+  const msg = 'Hello Node! test change in docker image \n'
   res.end(msg);
 });
 
