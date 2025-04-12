@@ -7,7 +7,23 @@ terraform {
   }
 }
 
-provider "docker" {}
+
+provider "docker" {
+  registry_auth {
+    address  = "docker.io"
+    username = var.dockerhub_username
+    password = var.dockerhub_password
+  }
+}
+
+variable "dockerhub_username" {
+  type = string
+}
+
+variable "dockerhub_password" {
+  type      = string
+  sensitive = true
+}
 
 resource "docker_image" "app_image" {
   name = "ahmedatiia11/node-hello:latest"
