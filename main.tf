@@ -10,7 +10,8 @@ terraform {
 provider "docker" {}
 
 resource "docker_image" "app_image" {
-  name = "ahmedatiia11/node-hello:latest"
+  name         = "ahmedatiia11/node-hello:latest"
+  keep_locally = false  # Ensures the image is not cached locally
 }
 
 resource "docker_container" "app_container" {
