@@ -23,6 +23,7 @@ resource "docker_registry_image" "app_image" {
   name          = docker_image.app_image.name
   keep_remotely = true  # Keep image in registry even after destroy
 }
+
 resource "docker_container" "app_container" {
   name  = "app"
   image = docker_image.app_image.image_id
