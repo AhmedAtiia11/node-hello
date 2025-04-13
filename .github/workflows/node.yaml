@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.19.1]
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -56,6 +57,8 @@ jobs:
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
+
 
     - name: Push Image to Docker Hub
       run: terraform apply -target=docker_registry_image.app_image -replace=docker_registry_image.app_image -auto-approve -input=false
