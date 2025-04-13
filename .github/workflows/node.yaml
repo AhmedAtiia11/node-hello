@@ -34,7 +34,7 @@ jobs:
         terraform_version: 1.7.4
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Initialize Terraform
+    - name: Terraform Init
       run: terraform init
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
