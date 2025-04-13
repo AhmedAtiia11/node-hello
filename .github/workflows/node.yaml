@@ -1,27 +1,25 @@
-name: Node.js CI
+name: Node.js CI/CD 
 
 on:
   push:
     branches:
       - 'main'
+
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
     strategy:
       matrix:
         node-version: [18.19.1]
-
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
-      
-    - name: Use Node.js ${{ matrix.node-version }} to build and start app
+
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.19.1
         cache: 'npm'
-    # - run: npm ci
-    # - run: npm start &
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -29,44 +27,43 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build and push
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/node-hello:latest
-
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.7.4
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Terraform Init
-      run: terraform init 
+    - name: Initialize Terraform
+      run: terraform init
+      env:
+        TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
-    - name: Terraform Destroy 
-      run: terraform destroy -auto-approve -input=false
+    # Phase 1: Build new image
+    - name: Build Docker Image
+      run: terraform apply -target=docker_image.app_image -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    # Phase 2: Push to registry
+    - name: Push Image to Docker Hub
+      run: terraform apply -target=docker_registry_image.app_image -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    # Phase 3: Destroy old infrastructure
+    - name: Destroy Previous Deployment
+      run: terraform destroy -target=docker_container.app_container -auto-approve -input=false
+      env:
+        TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
       continue-on-error: true
 
-    - name: Remove existing app container
-      run: |
-        if docker ps -a | grep -q app; then
-          echo "Found existing 'app' container. Removing..."
-          docker rm -f app
-        else
-          echo "No 'app' container found."
-        fi        
-    - name: Remove old app image
-      run: |
-        if docker images | grep -q ahmedatiia11/node-hello ; then
-          echo "Found existing 'node-hello' image. Removing..."
-          docker rmi -f ahmedatiia11/node-hello 
-        else
-          echo "No 'node-hello' image found."
-        fi
-    - name: Terraform Apply
-      run: terraform apply -input=false -auto-approve
+    # Phase 4: Deploy new infrastructure
+    - name: Deploy New Container
+      run: terraform apply -auto-approve -input=false
+      env:
+        TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+        TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
