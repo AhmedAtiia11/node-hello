@@ -28,7 +28,7 @@ jobs:
     - name: Install TFLint
       uses: terraform-linters/setup-tflint@v3
       with:
-        tflint_version: "0.56.0"
+        tflint_version: "v0.56.0"
 
     - name: Run TFLint
       run: tflint --init && tflint  
