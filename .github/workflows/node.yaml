@@ -69,3 +69,4 @@ jobs:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
