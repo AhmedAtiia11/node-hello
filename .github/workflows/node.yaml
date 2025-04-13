@@ -47,7 +47,7 @@ jobs:
       continue-on-error: true
       run: |
         terraform destroy -target=docker_container.app_container -auto-approve -input=false
-        docker rmi -f ahmedatiia11/node-hello:latest
+        docker rmi -f registry-1.docker.io/ahmedatiia11/node-hello
 
               
 
