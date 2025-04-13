@@ -39,28 +39,28 @@ jobs:
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
-    # Phase 1: Build new image
+    - name: Destroy Previous Deployment
+      env:
+        TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      continue-on-error: true
+      run: |
+        terraform destroy -target=docker_container.app_container -auto-approve -input=false
+        docker rmi -f ahmedatiia11/node-hello:latest
+
+              
+
     - name: Build Docker Image
       run: terraform apply -target=docker_image.app_image -auto-approve -input=false
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    # Phase 2: Push to registry
     - name: Push Image to Docker Hub
       run: terraform apply -target=docker_registry_image.app_image -auto-approve -input=false
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    # Phase 3: Destroy old infrastructure
-    - name: Destroy Previous Deployment
-      run: terraform destroy -target=docker_container.app_container -auto-approve -input=false
-      env:
-        TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      continue-on-error: true
-
-    # Phase 4: Deploy new infrastructure
     - name: Deploy New Container
       run: terraform apply -auto-approve -input=false
       env:
