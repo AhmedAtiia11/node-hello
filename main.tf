@@ -15,7 +15,7 @@ terraform {
   }
 }
 
-provider "docker" {}
+provider "docker" {host = "unix:///var/run/docker.sock"}
 
 resource "docker_image" "app_image" {
   name         = "ahmedatiia11/node-hello:latest"
