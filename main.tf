@@ -49,8 +49,8 @@ resource "docker_container" "app_container" {
   image = docker_image.app_image.image_id
   env = [
     "SERVICE=elastic",
-    "NEW_RELIC_LICENSE_KEY=114beed378df1617048e4c8abdfdf59cFFFFNRAL",
-    "NEW_RELIC_APP_NAME=node-hello-app"
+    "NEW_RELIC_APP_NAME=node-hello-app",
+    "NEW_RELIC_LICENCE_KEY=${var.new_relic_licence_key}"
   ]
 
   ports {
@@ -69,3 +69,9 @@ variable "dockerhub_password" {
   type      = string
   sensitive = true
 }
+
+variable "new_relic_licence_key" {
+  type      = string
+  sensitive = true
+}
+  
