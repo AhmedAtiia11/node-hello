@@ -60,7 +60,7 @@ jobs:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
+        TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
       continue-on-error: true
       run: |
         terraform destroy -target=docker_container.app_container -auto-approve -input=false
@@ -73,7 +73,7 @@ jobs:
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
+        TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
 
 # Build new docker image to DockerHub with terraform and pass dockerhub username and password and new relic licence key
     - name: Push Image to Docker Hub
@@ -81,7 +81,7 @@ jobs:
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
+        TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
 
 # Deploy new container with terraform and pass dockerhub username and password ,Terraform Cloud Token and new relic licence key
     - name: Deploy New Container
@@ -90,4 +90,4 @@ jobs:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-        TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
+        TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}

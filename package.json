@@ -20,11 +20,12 @@
   },
   "homepage": "https://github.com/AhmedAtiia11/node-hello#readme",
   "dependencies": {
+    "@newrelic/native-metrics": "^11.0.0",
     "newrelic": "^12.17.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.24.0",
-    "eslint": "^9.24.0",
-    "globals": "^16.0.0"
+    "@eslint/js": "^8.56.0",
+    "eslint": "^8.56.0",
+    "globals": "^13.24.0"
   }
 }

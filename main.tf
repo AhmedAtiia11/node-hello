@@ -29,7 +29,7 @@ variable "dockerhub_password" {
   description = "Docker Hub password for authentication and pushing images"
 }
 
-variable "new_relic_licence_key" {
+variable "new_relic_license_key" {
   type        = string
   sensitive   = true
   description = "New Relic license key for application monitoring and observability"
@@ -72,7 +72,7 @@ resource "docker_container" "app_container" {
   env = [
     "SERVICE=elastic",
     "NEW_RELIC_APP_NAME=node-hello-app",
-    "NEW_RELIC_LICENCE_KEY=${var.new_relic_licence_key}"
+    "NEW_RELIC_LICENSE_KEY=${var.new_relic_license_key}"
   ]
 
   ports {
