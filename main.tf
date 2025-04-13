@@ -7,6 +7,7 @@ terraform {
     }
   }
 
+# Terraform Cloud configuration
   cloud {
     organization = "nawy"
     workspaces {
@@ -14,6 +15,26 @@ terraform {
     }
   }
 }
+
+# Variable definitions
+variable "dockerhub_username" {
+  type        = string
+  sensitive   = true
+  description = "Docker Hub username for authentication and pushing images"
+}
+
+variable "dockerhub_password" {
+  type        = string
+  sensitive   = true
+  description = "Docker Hub password for authentication and pushing images"
+}
+
+variable "new_relic_licence_key" {
+  type        = string
+  sensitive   = true
+  description = "New Relic license key for application monitoring and observability"
+}
+  
 
 provider "docker" {
   host = "unix:///var/run/docker.sock"
@@ -60,19 +81,3 @@ resource "docker_container" "app_container" {
   }
 }
 
-# Variable definitions
-variable "dockerhub_username" {
-  type      = string
-  sensitive = true
-}
-
-variable "dockerhub_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "new_relic_licence_key" {
-  type      = string
-  sensitive = true
-}
-  

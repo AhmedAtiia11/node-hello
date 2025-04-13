@@ -5,6 +5,8 @@ on:
     branches:
       - 'main'
 
+
+# running Workflow on self-hosted runner
 jobs:
   deploy:
     runs-on: self-hosted
@@ -13,18 +15,23 @@ jobs:
         node-version: [18.19.1]
 
     steps:
+
+# Checkout out Code
     - name: Checkout Code
       uses: actions/checkout@v4
 
+# Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 18.19.1
         cache: 'npm'
 
+# Linting nodeJS Code
     - name: Run ESLint
       run: npm run lint  
 
+# Linting Terraform Code
     - name: Install TFLint
       uses: terraform-linters/setup-tflint@v3
       with:
@@ -33,24 +40,21 @@ jobs:
     - name: Run TFLint
       run: tflint --init && tflint  
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-
+# Setup Terraform
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.7.4
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
+       
+# Terraform initiate command and pass terraform cloud token
     - name: Terraform Init
       run: terraform init
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
+# Destroy The Previous Deployment and removeold image to make sure to create new one
+# and pass Terraform cloud token , dockerhub username and password and new relic licence key
     - name: Destroy Previous Deployment
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
@@ -62,8 +66,8 @@ jobs:
         terraform destroy -target=docker_container.app_container -auto-approve -input=false
         docker rmi -f registry-1.docker.io/ahmedatiia11/node-hello
 
-              
-
+            
+# Build new docker image with terraform and pass dockerhub username and password and new relic licence key
     - name: Build Docker Image
       run: terraform apply -target=docker_image.app_image -auto-approve -input=false
       env:
@@ -71,7 +75,7 @@ jobs:
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
 
-
+# Build new docker image to DockerHub with terraform and pass dockerhub username and password and new relic licence key
     - name: Push Image to Docker Hub
       run: terraform apply -target=docker_registry_image.app_image -replace=docker_registry_image.app_image -auto-approve -input=false
       env:
@@ -79,7 +83,7 @@ jobs:
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_VAR_new_relic_licence_key: ${{ secrets.NEW_RELIC_LICENCE_KEY }}
 
-
+# Deploy new container with terraform and pass dockerhub username and password ,Terraform Cloud Token and new relic licence key
     - name: Deploy New Container
       run: terraform apply -auto-approve -input=false
       env:
