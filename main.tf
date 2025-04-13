@@ -27,8 +27,13 @@ provider "docker" {
 
 # Build local image
 resource "docker_image" "app_image" {
-  name         = "ahmedatiia11/node-hello:latest"  
-  keep_locally = false 
+  name         = "registry-1.docker.io/ahmedatiia11/node-hello:latest"
+  keep_locally = false
+  
+  build {
+    context = "."
+    dockerfile = "Dockerfile"
+  }
 }
 
 # Push to Docker Hub
