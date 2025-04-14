@@ -1,7 +1,7 @@
 # Node Hello World
 
 ## Overview
-A fully automated CI/CD pipeline that handles everything from code checkout and testing to deployment as a Docker container. The pipeline uses GitHub Actions for automation, Terraform for infrastructure management, and NewRelic for monitoring.
+A fully automated CI/CD pipeline that handles everything from code checkout and testing to deployment as a Docker container. The pipeline uses GitHub Actions for automation, Terraform for infrastructure management,remote state management via Terraform Cloud and NewRelic for monitoring.
 
 ## Architecture
 - GitHub Actions for CI/CD pipeline orchestration
@@ -28,6 +28,7 @@ A fully automated CI/CD pipeline that handles everything from code checkout and 
 3. **DockerHub**
    - Create an account at hub.docker.com
    - Note your username and password
+   - Don't forget to change dockerimage to push to your dockerhub
 
 ### GitHub Repository Setup
 1. **Configure GitHub Secrets**
@@ -50,6 +51,7 @@ A fully automated CI/CD pipeline that handles everything from code checkout and 
    ```bash
    npm install
    ```
+   to sync between package.json and package-lock.josn 
 
 2. **Configure ESLint**
    The project includes ESLint for code quality. The following scripts are available:
@@ -76,6 +78,8 @@ A fully automated CI/CD pipeline that handles everything from code checkout and 
 1. The application runs on port 3000
 2. Docker daemon is running and accessible
 3. Terraform Cloud is used for state management instead of local state files
+4. self-hosted GitHub runner has proper Docker permissions
+5. Don't Forget to change docker username in main.tf to your dockerhub username
 
 ## Monitoring
 - Access the NewRelic dashboard to monitor:
