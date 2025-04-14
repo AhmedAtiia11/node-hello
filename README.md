@@ -67,12 +67,13 @@ A fully automated CI/CD pipeline that handles everything from code checkout and 
    - Terraform code linting with TFLint
 3. Terraform initialization and cloud configuration
 4. Infrastructure management:
-   - Destroy old infrastructure
    - Remove old Docker image
    - Build new Docker image
    - Push to DockerHub
+   - Destroy old infrastructure
    - Deploy new container
 5. Monitoring via NewRelic dashboard
+6. Health Check if fails the workflow fails
 
 ## Assumptions Made
 1. The application runs on port 3000
