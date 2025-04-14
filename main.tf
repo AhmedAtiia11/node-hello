@@ -17,6 +17,12 @@ terraform {
 }
 
 # Variable definitions
+variable "docker_image_name" {
+  type        = string
+  description = "Name of the Docker image"
+  default     = "registry-1.docker.io/ahmedatiia11/node-hello:latest"
+}
+
 variable "dockerhub_username" {
   type        = string
   sensitive   = true
@@ -49,7 +55,7 @@ provider "docker" {
 
 # Build local image
 resource "docker_image" "app_image" {
-  name         = "registry-1.docker.io/ahmedatiia11/node-hello:latest"
+  name         = var.docker_image_name
   keep_locally = false
   
   build {
@@ -60,7 +66,7 @@ resource "docker_image" "app_image" {
 
 # Push to Docker Hub
 resource "docker_registry_image" "app_image" {
-  name = docker_image.app_image.name
+  name = var.docker_image_name
 }
 
 

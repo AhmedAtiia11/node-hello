@@ -53,37 +53,39 @@ jobs:
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
 
-# Destroy The Previous Deployment and removeold image to make sure to create new one
-# and pass Terraform cloud token , dockerhub username and password and new relic licence key
+# Destroy The Previous Deployment and remove old image to make sure to create new one
+# and pass Terraform cloud token, dockerhub username and password, new relic licence key, and docker image name
     - name: Destroy Previous Deployment
       env:
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
+        TF_VAR_docker_image_name: registry-1.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/node-hello:latest
       continue-on-error: true
       run: |
         terraform destroy -target=docker_container.app_container -auto-approve -input=false -lock=false
-        docker rmi -f registry-1.docker.io/ahmedatiia11/node-hello
-
+        docker rmi -f ${{ env.TF_VAR_docker_image_name }}
             
-# Build new docker image with terraform and pass dockerhub username and password and new relic licence key
+# Build new docker image with terraform and pass dockerhub username and password, new relic licence key, and docker image name
     - name: Build Docker Image
       run: terraform apply -target=docker_image.app_image -auto-approve -input=false -lock=false
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
+        TF_VAR_docker_image_name: registry-1.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/node-hello:latest
 
-# Build new docker image to DockerHub with terraform and pass dockerhub username and password and new relic licence key
+# Push new docker image to DockerHub with terraform and pass dockerhub username and password, new relic licence key, and docker image name
     - name: Push Image to Docker Hub
       run: terraform apply -target=docker_registry_image.app_image -replace=docker_registry_image.app_image -auto-approve -input=false -lock=false
       env:
         TF_VAR_dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
+        TF_VAR_docker_image_name: registry-1.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/node-hello:latest
 
-# Deploy new container with terraform and pass dockerhub username and password ,Terraform Cloud Token and new relic licence key
+# Deploy new container with terraform and pass dockerhub username and password, Terraform Cloud Token, new relic licence key, and docker image name
     - name: Deploy New Container
       run: terraform apply -auto-approve -input=false -lock=false
       env:
@@ -91,3 +93,4 @@ jobs:
         TF_VAR_dockerhub_password: ${{ secrets.DOCKERHUB_PASSWORD }}
         TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
         TF_VAR_new_relic_license_key: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
+        TF_VAR_docker_image_name: registry-1.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/node-hello:latest
